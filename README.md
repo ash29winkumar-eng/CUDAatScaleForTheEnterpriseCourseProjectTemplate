@@ -1,30 +1,83 @@
-# Example README.md file for Coursera Projects
+# Image Filtering using NVIDIA NPP with CUDA
 
 ## Overview
 
-## Code Organization
+This project demonstrates the use of NVIDIA Performance Primitives (NPP) library with CUDA to perform image filtering. The goal is to utilize GPU acceleration to efficiently filter a given image by a specified filter, leveraging the computational power of modern GPUs.
 
-```bin/```
-This folder should hold all binary/executable code that is built automatically or manually. Executable code should have use the .exe extension or programming language-specific extension.
+## Prerequisites
 
-```data/```
-This folder should hold all example data in any format. If the original data is rather large or can be brought in via scripts, this can be left blank in the respository, so that it doesn't require major downloads when all that is desired is the code/structure.
+Download and install the [CUDA Toolkit 12.4](https://developer.nvidia.com/cuda-downloads) for your corresponding platform.
 
-```lib/```
-Any libraries that are not installed via the Operating System-specific package manager should be placed here, so that it is easier for inclusion/linking.
+## Build and Run
 
-```src/```
-The source code should be placed here in a hierarchical fashion, as appropriate.
+### Windows
+The Windows program is built using the Visual Studio 2022 IDE.
 
-```README.md```
-This file should hold the description of the project so that anyone cloning or deciding if they want to clone this repository can understand its purpose to help with their decision.
+### Linux
+The Linux program is built using makefiles. To use the makefiles, just run make:
+```
+$ make
+```
 
-```INSTALL```
-This file should hold the human-readable set of instructions for installing the code so that it can be executed. If possible it should be organized around different operating systems, so that it can be done by as many people as possible with different constraints.
+After building the project, you can run the program using the following command:
 
-```Makefile or CMAkeLists.txt or build.sh```
-There should be some rudimentary scripts for building your project's code in an automatic fashion.
+```bash
+make run
+```
 
-```run.sh```
-An optional script used to run your executable code, either with or without command-line arguments.
+This command will execute the compiled binary, filtering the input image (Lena.png) by a 5x5 box filter with replicate border, and save the result as Lena_box_replicate.png in the data/ directory.
+
+If you wish to run the binary directly with custom input/output files, you can use:
+
+```bash
+./bin/npp-filters --input data/Lena.png --filter box --border replicate --output data/Lena_rotated.png
+```
+
+You can run all filters/borders combinaison:
+
+```bash
+./run.sh
+```
+
+## Program options
+
+| Options | Description | Values |
+|--------|-------------|--------|
+|\-\-input| Input filename | data/Lena.png(Default) |
+|\-\-output| Output filename | |
+|\-\-filter| Select filter type | box(Default), sobel_h, sobel_v, roberts_up, roberts_down, laplace, gauss, highpass, lowpass, sharpen, wiener |
+|\-\-border| Select border type | none, replicate(Default) |
+
+| Filter | Description |
+|--------|-------------|
+|box|[Computes the average pixel values of the pixels under a rectangular mask](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-box)|
+|sobel_h|[Filters the image using a horizontal Sobel filter kernel](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-sobel)|
+|sobel_v|[Filters the image using a vertical Sobel filter kernel](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-sobel)|
+|roberts_down|[Filters the image using a horizontal Roberts filter kernel](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-roberts)|
+|roberts_up|[Filters the image using a vertical Roberts filter kernel](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-roberts)|
+|laplace|[Filters the image using a Laplacian filter kernel](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-laplace)|
+|gauss|[Filters the image using a Gaussian filter kernel](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-gauss)|
+|highpass|[Filters the image using a high-pass filter kernel](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-high-pass)|
+|lowpass|[Filters the image using a low-pass filter kernel](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-low-pass)|
+|sharpen|[Filters the image using a sharpening filter kernel](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-sharpen)|
+|wiener|[Noise removal filtering of an image using an adaptive Wiener filter with border control](https://docs.nvidia.com/cuda/npp/image_filtering_functions.html#image-filter-wiener-border)|
+
+## Output Sample
+
+```bash
+./bin/npp-filters --filter sobel_v --border none
+```
+```bash
+bin/npp-filters Starting...
+
+GPU Device 0: "Ampere" with compute capability 8.6
+
+NPP Library Version 12.3.1
+  CUDA Driver  Version: 12.6
+  CUDA Runtime Version: 12.6
+  Device 0: <          Ampere >, Compute SM 8.6 detected
+npp-filters opened: <./data/Lena.png> successfully!
+Saved image: ./data/Lena_filter_sobel_v_none.png
+```
+<img width="1666" height="1250" alt="image" src="https://github.com/user-attachments/assets/b7aa0b9d-dcd1-4e0d-abfc-c1ce13b84c59" />
 
